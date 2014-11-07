@@ -14,10 +14,10 @@ class LogStash::Codecs::Graphite < LogStash::Codecs::Base
   DEFAULT_METRICS_FORMAT = "*"
   METRIC_PLACEHOLDER = "*"
 
-  # The metric(s) to use. This supports dynamic strings like %{host}
+  # The metric(s) to use. This supports dynamic strings like `%{host}`
   # for metric names and also for values. This is a hash field with key
   # of the metric name, value of the metric value. Example:
-  #
+  # [source,ruby]
   #     [ "%{host}/uptime", "%{uptime_1m}" ]
   #
   # The value will be coerced to a floating point value. Values which cannot be
@@ -33,9 +33,9 @@ class LogStash::Codecs::Graphite < LogStash::Codecs::Base
   # Exclude regex matched metric names, by default exclude unresolved %{field} strings
   config :exclude_metrics, :validate => :array, :default => [ "%\{[^}]+\}" ]
 
-  # Defines format of the metric string. The placeholder '*' will be
+  # Defines format of the metric string. The placeholder `*` will be
   # replaced with the name of the actual metric.
-  #
+  # [source,ruby]
   #     metrics_format => "foo.bar.*.sum"
   #
   # NOTE: If no metrics_format is defined the name of the metric will be used as fallback.
