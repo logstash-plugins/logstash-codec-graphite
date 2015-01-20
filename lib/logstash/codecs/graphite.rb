@@ -7,7 +7,6 @@ require "logstash/timestamp"
 class LogStash::Codecs::Graphite < LogStash::Codecs::Base
   config_name "graphite"
 
-  milestone 2
 
   EXCLUDE_ALWAYS = [ "@timestamp", "@version" ]
 
