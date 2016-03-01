@@ -43,8 +43,6 @@ class LogStash::Codecs::Graphite < LogStash::Codecs::Base
   # Instead of $metricname => $value, create the event fields as 'key' => $metricname, 'value' => $value
   config :as_key_value, :validate => :boolean, :default => false
 
-
-
   public
   def initialize(params={})
     super(params)
