@@ -40,6 +40,9 @@ class LogStash::Codecs::Graphite < LogStash::Codecs::Base
   # NOTE: If no metrics_format is defined the name of the metric will be used as fallback.
   config :metrics_format, :validate => :string, :default => DEFAULT_METRICS_FORMAT
 
+  config :as_key_value, :validate => :boolean, :default => false
+
+
 
   public
   def initialize(params={})
@@ -51,7 +54,14 @@ class LogStash::Codecs::Graphite < LogStash::Codecs::Base
   def decode(data)
     @lines.decode(data) do |event|
       name, value, time = event["message"].split(" ")
-      yield LogStash::Event.new(name => value.to_f, LogStash::Event::TIMESTAMP => LogStash::Timestamp.at(time.to_i))
+
+      if @as_key_value
+        yield LogStash::Event.new("key" => name, "value" => value.to_f, LogStash::Event::TIMESTAMP => LogStash::Timestamp.at(time.to_i))
+      else
+        yield LogStash::Event.new(name => value.to_f, LogStash::Event::TIMESTAMP => LogStash::Timestamp.at(time.to_i))
+      end
+
+      
     end # @lines.decode
   end # def decode
 
