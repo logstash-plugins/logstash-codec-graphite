@@ -59,7 +59,6 @@ class LogStash::Codecs::Graphite < LogStash::Codecs::Base
       else
         yield LogStash::Event.new(name => value.to_f, LogStash::Event::TIMESTAMP => LogStash::Timestamp.at(time.to_i))
       end
-
       
     end # @lines.decode
   end # def decode
