@@ -40,6 +40,7 @@ class LogStash::Codecs::Graphite < LogStash::Codecs::Base
   # NOTE: If no metrics_format is defined the name of the metric will be used as fallback.
   config :metrics_format, :validate => :string, :default => DEFAULT_METRICS_FORMAT
 
+  # Instead of $metricname => $value, create the event fields as 'key' => $metricname, 'value' => $value
   config :as_key_value, :validate => :boolean, :default => false
 
 
