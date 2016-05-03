@@ -14,7 +14,7 @@ describe LogStash::Codecs::Graphite do
       timestamp = Time.now.gmtime.to_i
       subject.decode("#{name} #{value} #{timestamp}\n") do |event|
         insist { event.is_a? LogStash::Event }
-        insist { event[name] } == value
+        insist { event.get(name) } == value
       end
     end
 
@@ -27,7 +27,7 @@ describe LogStash::Codecs::Graphite do
       counter = 0
       subject.decode(data.join('')) do |event|
         insist { event.is_a? LogStash::Event }
-        insist { event[names[counter]] } == values[counter]
+        insist { event.get(names[counter]) } == values[counter]
         counter = counter+1
       end
       insist { counter } == total_count
@@ -44,7 +44,7 @@ describe LogStash::Codecs::Graphite do
       insist { !event_returned }
       subject.decode("\n") do |event|
         insist { event.is_a? LogStash::Event }
-        insist { event[name] } == value
+        insist { event.get(name) } == value
         event_returned = true
       end
       insist { event_returned }
