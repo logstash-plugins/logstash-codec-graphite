@@ -92,5 +92,19 @@ describe LogStash::Codecs::Graphite do
       end
       subject.encode(LogStash::Event.new("@timestamp" => timestamp))
     end
+
+    it "should support dynamic strings in metrics_format" do
+      name = Random.srand.to_s(36)
+      value = Random.rand*1000
+      timestamp = Time.now.gmtime
+      host = "localhost"
+      subject.metrics = {name => value}
+      subject.metrics_format = "%{host}.foo.bar.*.baz"
+      subject.on_event do |event, data|
+        insist { data.is_a? String }
+        insist { data } == "#{host}.foo.bar.#{name}.baz #{value} #{timestamp.to_i}\n"
+      end
+      subject.encode(LogStash::Event.new({'host' => host, "@timestamp" => timestamp}))
+    end
   end
 end

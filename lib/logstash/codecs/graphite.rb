@@ -33,9 +33,10 @@ class LogStash::Codecs::Graphite < LogStash::Codecs::Base
   config :exclude_metrics, :validate => :array, :default => [ "%\{[^}]+\}" ]
 
   # Defines format of the metric string. The placeholder `*` will be
-  # replaced with the name of the actual metric.
+  # replaced with the name of the actual metric. This supports dynamic
+  # strings like `%{host}`.
   # [source,ruby]
-  #     metrics_format => "foo.bar.*.sum"
+  #     metrics_format => "%{host}.foo.bar.*.sum"
   #
   # NOTE: If no metrics_format is defined the name of the metric will be used as fallback.
   config :metrics_format, :validate => :string, :default => DEFAULT_METRICS_FORMAT
@@ -70,6 +71,7 @@ class LogStash::Codecs::Graphite < LogStash::Codecs::Base
 
     messages = []
     timestamp = event.sprintf("%{+%s}")
+    @metrics_format = event.sprintf(@metrics_format)
 
     if @fields_are_metrics
       @logger.debug("got metrics event", :metrics => event.to_hash)
