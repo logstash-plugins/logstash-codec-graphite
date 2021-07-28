@@ -3,10 +3,14 @@ require "logstash/codecs/base"
 require "logstash/codecs/line"
 require "logstash/timestamp"
 
+require 'logstash/plugin_mixins/event_support/event_factory_adapter'
+
 # This codec will encode and decode Graphite formated lines.
 class LogStash::Codecs::Graphite < LogStash::Codecs::Base
-  config_name "graphite"
 
+  include LogStash::PluginMixins::EventSupport::EventFactoryAdapter
+
+  config_name "graphite"
 
   EXCLUDE_ALWAYS = [ "@timestamp", "@version" ]
 
@@ -52,7 +56,7 @@ class LogStash::Codecs::Graphite < LogStash::Codecs::Base
   def decode(data)
     @lines.decode(data) do |event|
       name, value, time = event.get("message").split(" ")
-      yield LogStash::Event.new(name => value.to_f, LogStash::Event::TIMESTAMP => LogStash::Timestamp.at(time.to_i))
+      yield event_factory.new_event(name => value.to_f, LogStash::Event::TIMESTAMP => LogStash::Timestamp.at(time.to_i))
     end # @lines.decode
   end # def decode
 
