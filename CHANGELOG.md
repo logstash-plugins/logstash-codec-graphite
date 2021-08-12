@@ -1,3 +1,6 @@
+## 3.0.6
+  - Feat: added event-factory support [#7](https://github.com/logstash-plugins/logstash-codec-graphite/pull/7)
+
 ## 3.0.5
   - Update gemspec summary
 
